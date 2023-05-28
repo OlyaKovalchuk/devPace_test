@@ -31,11 +31,14 @@ class _ItemListPageState extends State<ItemListPage> {
       floatingActionButton: Row(
         mainAxisAlignment: MainAxisAlignment.end,
         children: [
+          /// Add button
           FloatingActionButton(
             onPressed: _addItem,
             child: const Icon(Icons.add),
           ),
           const SizedBox(width: 4),
+
+          /// Remove button
           FloatingActionButton(
             backgroundColor: Colors.red,
             onPressed: _removeItem,

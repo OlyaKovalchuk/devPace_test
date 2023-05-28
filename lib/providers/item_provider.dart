@@ -27,6 +27,7 @@ class ItemProvider {
     return;
   }
 
+  /// To generate random item name
   String _getRandomString() {
     var random = Random.secure();
     var values = List<int>.generate(5, (i) => random.nextInt(255));
