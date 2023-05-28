@@ -21,10 +21,13 @@ class ReceivedItemState extends ItemListState {
 class RemovedItemState extends ItemListState {}
 
 class ErrorState extends ItemListState {
-  ErrorState(this.title, this.message);
+  ErrorState({
+    this.title,
+    this.message,
+  });
 
-  final String title;
-  final String message;
+  final String? title;
+  final String? message;
 
   @override
   List<Object?> get props => [title, message];

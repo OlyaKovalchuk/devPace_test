@@ -1,7 +1,7 @@
 import 'dart:convert';
 import 'dart:math';
 
-class GenerateItemService {
+class ItemProvider {
   Future<String> generateItemName() async {
     // to simulate loading data
     await Future.delayed(const Duration(seconds: 1));

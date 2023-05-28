@@ -1,6 +1,6 @@
 import 'package:dev_pace_test/pages/bloc/item_list_event.dart';
 import 'package:dev_pace_test/pages/bloc/item_list_state.dart';
-import 'package:dev_pace_test/services/generate_item_service.dart';
+import 'package:dev_pace_test/providers/item_provider.dart';
 import 'package:dev_pace_test/utils/emitter_ext.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
@@ -14,17 +14,17 @@ class ItemListBloc extends Bloc<ItemListEvent, ItemListState> {
     );
   }
 
-  final _generateItemService = GenerateItemService();
+  final _itemProvider = ItemProvider();
 
   Stream<ItemListState> _fetchItem() async* {
     yield ProgressState();
 
     try {
-      final itemName = await _generateItemService.generateItemName();
+      final itemName = await _itemProvider.generateItemName();
 
       yield ReceivedItemState(itemName);
     } catch (error, _) {
-      yield ErrorState('Error', error.toString());
+      yield ErrorState(message: error.toString());
     }
   }
 
@@ -32,11 +32,11 @@ class ItemListBloc extends Bloc<ItemListEvent, ItemListState> {
     yield ProgressState();
 
     try {
-      await _generateItemService.simulateRemovingItem();
+      await _itemProvider.simulateRemovingItem();
 
       yield RemovedItemState();
     } catch (error, _) {
-      yield ErrorState('Error', error.toString());
+      yield ErrorState(message: error.toString());
     }
   }
 }

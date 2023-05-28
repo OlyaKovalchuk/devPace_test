@@ -91,8 +91,8 @@ class _ItemListPageState extends State<ItemListPage> {
         barrierDismissible: false,
         context: context,
         builder: (context) => AlertDialog(
-          title: Text(state.title),
-          content: Text(state.message),
+          title: Text(state.title ?? 'Error'),
+          content: Text(state.message ?? ''),
           actions: [
             TextButton(
               onPressed: Navigator.of(context).pop,
