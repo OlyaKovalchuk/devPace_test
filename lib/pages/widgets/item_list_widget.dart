@@ -1,3 +1,4 @@
+import 'package:dev_pace_test/constants.dart';
 import 'package:dev_pace_test/generated/assets.dart';
 import 'package:flutter/material.dart';
 
@@ -14,10 +15,12 @@ class ItemListWidget extends StatefulWidget {
 }
 
 class _ItemListWidgetState extends State<ItemListWidget> {
+  static const kLogoAnimDuration = 30;
   final _gridKey = GlobalKey<State>();
   final _maxLogoHeight = ValueNotifier<double?>(null);
 
-  double get _pageHeight => MediaQuery.sizeOf(context).height;
+  double get _pageHeight =>
+      MediaQuery.sizeOf(context).height - MediaQuery.of(context).padding.bottom;
 
   List<String> get _items => widget.items;
 
@@ -39,26 +42,37 @@ class _ItemListWidgetState extends State<ItemListWidget> {
 
   @override
   Widget build(BuildContext context) {
-    return SafeArea(
-      child: CustomScrollView(
-        slivers: [
-          /// Logo image
-          ValueListenableBuilder(
-            valueListenable: _maxLogoHeight,
-            builder: (context, maxHeight, _) => SliverAppBar(
-              backgroundColor: Colors.transparent,
-              expandedHeight: maxHeight ?? _pageHeight,
-              flexibleSpace: Center(
-                child: Image.asset(Assets.assetsDevpaceLogo),
-              ),
-            ),
-          ),
+    final bottomPadding = MediaQuery.of(context).padding.bottom;
 
-          /// Item list
-          SliverToBoxAdapter(
-            child: GridView.builder(
+    return SafeArea(
+      child: SingleChildScrollView(
+        reverse: true,
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            /// Logo image
+            ValueListenableBuilder(
+              valueListenable: _maxLogoHeight,
+              builder: (context, maxHeight, _) {
+                return AnimatedContainer(
+                  duration: const Duration(milliseconds: kLogoAnimDuration),
+                  constraints: BoxConstraints(
+                    minHeight: kLogoMinHeight,
+                    maxHeight: (maxHeight ?? _pageHeight) - bottomPadding,
+                  ),
+                  child: SizedBox.expand(
+                    child: Image.asset(
+                      Assets.assetsDevpaceLogo,
+                      fit: BoxFit.contain,
+                    ),
+                  ),
+                );
+              },
+            ),
+
+            GridView.builder(
               key: _gridKey,
-              padding: const EdgeInsets.symmetric(horizontal: 16),
+              itemCount: _items.length,
               physics: const NeverScrollableScrollPhysics(),
               shrinkWrap: true,
               gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
@@ -67,18 +81,14 @@ class _ItemListWidgetState extends State<ItemListWidget> {
                 crossAxisSpacing: 10,
                 mainAxisSpacing: 10,
               ),
-              itemCount: _items.length,
-              itemBuilder: (context, index) {
-                final item = _items[index];
-                return Card(
-                  child: Center(
-                    child: Text('$item $index'),
-                  ),
-                );
-              },
-            ),
-          ),
-        ],
+              itemBuilder: (BuildContext context, int index) => Card(
+                child: Center(
+                  child: Text('${_items[index]} $index'),
+                ),
+              ),
+            )
+          ],
+        ),
       ),
     );
   }
@@ -88,12 +98,15 @@ class _ItemListWidgetState extends State<ItemListWidget> {
     final gridRenderBox =
         _gridKey.currentContext?.findRenderObject() as RenderBox?;
 
-    final gridHeight = gridRenderBox?.size.height ?? 0;
+    final gridHeight = (gridRenderBox?.size.height ?? 0);
 
-    final maxHeight = _pageHeight - paddings.vertical;
+    final maxHeight = _pageHeight - paddings.top;
 
     if (maxHeight > gridHeight) {
-      _maxLogoHeight.value = maxHeight - gridHeight;
+      final maxLogoHeight = maxHeight - gridHeight;
+      if (maxLogoHeight >= kLogoMinHeight) {
+        _maxLogoHeight.value = maxLogoHeight;
+      }
     }
   }
 }

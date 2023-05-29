@@ -1,36 +1,11 @@
-import 'dart:convert';
-import 'dart:math';
+import 'package:dev_pace_test/data/item_data_source/item_data_source.dart';
 
 class ItemProvider {
-  Future<String> generateItemName() async {
-    // to simulate loading data
-    await Future.delayed(const Duration(seconds: 1));
+  ItemProvider(this._itemDataSource);
 
-    final returnItem = Random().nextBool();
+  final ItemDataSource _itemDataSource;
 
-    if (returnItem) {
-      return _getRandomString();
-    } else {
-      throw Exception('Unsuccessful generation of a name');
-    }
-  }
+  Future<String> generateItemName() => _itemDataSource.generateItemName();
 
-  Future<void> simulateRemovingItem() async {
-    // to simulate loading data
-    await Future.delayed(const Duration(seconds: 1));
-
-    final returnItem = Random().nextBool();
-
-    if (!returnItem) {
-      throw Exception('Unsuccessful removing of an item');
-    }
-    return;
-  }
-
-  /// To generate random item name
-  String _getRandomString() {
-    var random = Random.secure();
-    var values = List<int>.generate(5, (i) => random.nextInt(255));
-    return base64UrlEncode(values);
-  }
+  Future<void> simulateRemovingItem() => _itemDataSource.simulateRemovingItem();
 }

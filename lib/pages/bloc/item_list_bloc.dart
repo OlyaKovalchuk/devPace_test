@@ -1,3 +1,4 @@
+import 'package:dev_pace_test/data/item_data_source/item_data_source.dart';
 import 'package:dev_pace_test/pages/bloc/item_list_event.dart';
 import 'package:dev_pace_test/pages/bloc/item_list_state.dart';
 import 'package:dev_pace_test/providers/item_provider.dart';
@@ -14,7 +15,7 @@ class ItemListBloc extends Bloc<ItemListEvent, ItemListState> {
     );
   }
 
-  final _itemProvider = ItemProvider();
+  final _itemProvider = ItemProvider(ItemDataSource());
 
   Stream<ItemListState> _fetchItem() async* {
     yield ProgressState();
